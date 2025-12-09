@@ -1,0 +1,353 @@
+<html>
+<head>
+<link rel="stylesheet" href="styles/default.css" type="text/css" />
+<script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body onUnload="javascript:destroywindow();">
+<div id="overDiv" STYLE="position:absolute; visibility:hidden; z-index:1000;"></div>
+<script language="javascript" type="text/javascript"><!--
+
+	var windowcreated = false;
+	var folderwnd = null;
+	var writedoc = window.parent.search_bottom.document;
+
+	
+	function createPopup( url)
+	{
+		destroywindow();
+		Now = new Date();
+		folderwnd = window.open(url, 'Window'+Now.getMilliseconds(), 'width=500,height=460,toolbar=no,titlebar=no,status=no,resizable=no,personalbar=no,menubar=no,directories=no');
+
+		if (folderwnd.opener == null) {
+			folderwnd.opener = self;
+		}
+
+		windowcreated = true;
+		return true;
+	}
+
+	function createwindow(title_id, saveInternet) {
+		destroywindow();
+		Now = new Date();
+		folderwnd = window.open('http://audioweb.radio2.nl//folder.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&saveinternet='+saveInternet+'&title_id='+title_id, 'Window'+Now.getMilliseconds(), 'width=500,height=460,toolbar=no,titlebar=no,status=no,resizable=no,personalbar=no,menubar=no,directories=no');
+
+		if (folderwnd.opener == null) {
+			folderwnd.opener = self;
+		}
+
+		windowcreated = true;
+
+		return(true);
+	}
+
+	function destroywindow() {
+		if (windowcreated) {
+			windowcreated = false;
+		 	if (folderwnd) {
+				folderwnd.close();
+			}
+		}
+
+		return(true);
+	}
+
+	function writebottom(sf, ra, wmf, rxml, mpd, name, title, title_id) {
+
+		var DownloadVenster = '';
+		DownloadVenster = '<HTML>\n<HEAD><TITLE>Search Bottom</TITLE>\n';
+		DownloadVenster += '<LINK REL="STYLESHEET" HREF="styles/default.css" TYPE="text/css"></HEAD>\n';
+		DownloadVenster += '<BODY BGCOLOR=#FFFFFF BACKGROUND="images/background.gif">\n';
+		DownloadVenster += '<TABLE ID=T1 CELLPADDING=2 CELLSPACING=0 BORDER=0 HEIGHT=\"100%\" WIDTH=\"100%\"><TR ID=T1><TD class=bottomline>&nbsp;</TD><TD ID=T1 ALIGN=LEFT valign=top class=bottomline>';
+		DownloadVenster += name + ' - ' + title + '</TD><TD ALIGN=RIGHT VALIGN=TOP>\n';
+		DownloadVenster += '<IMG ALIGN=TOP SRC="images/clear.gif" width=16 height=8 />';
+
+		if (sf) {
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&sf=1&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_mpeg.gif\" BORDER=0 hspace=2 /></A>';
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&sf=2&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_raw.gif\" BORDER=0 /></A><IMG ALIGN=TOP SRC="images/clear.gif" width=6 height=16 />';
+		}
+
+		if (ra) {
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&ra=1&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_real.gif\" BORDER=0 hspace=2 /></A>';
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&ra=2&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_raw.gif\" BORDER=0 /></A><IMG ALIGN=TOP SRC="images/clear.gif" width=6 height=16 />';
+		}
+
+		if (mpd) {
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&mpd=1&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_mp3.gif\" BORDER=0 hspace=2 /></A>';
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&mpd=2&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_raw.gif\" BORDER=0 /></A><IMG ALIGN=TOP SRC="images/clear.gif" width=6 height=16 />';
+		}
+
+		if (wmf) {
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&wma=1&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_wma.gif\" BORDER=0 hspace=2 /></A>';
+			DownloadVenster += '<A HREF=\"http://audioweb.radio2.nl//download.php?Musima=fsvi7udah8kj232jkdgp2dmgl1&wma=2&title_id='+title_id+'\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_raw.gif\" BORDER=0 /></A><IMG ALIGN=TOP SRC="images/clear.gif" width=6 height=16 />';
+		}
+
+		if (rxml) {
+			DownloadVenster += '<A HREF=\"javascript:void(0);\" onclick=\"javascript:return parent.search_main.createwindow('+title_id+', 0);\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_map.gif\" BORDER=0 hspace=2 /></A><IMG ALIGN=TOP SRC="images/clear.gif" width=6 height=16 />';
+						DownloadVenster += '<A class=\"listview\" HREF=\"javascript:void(0);\" onclick=\"javascript:return parent.search_main.createwindow('+title_id+', 1);\"><IMG ALIGN=TOP SRC=\"images/bottom_menu_internet.gif\" BORDER=0 hspace=2 /></A>';
+					}
+		
+//		DownloadVenster += '<IMG ALIGN=TOP SRC=\"images/bottom_menu_right.gif\" BORDER=0 />';
+		DownloadVenster += '</TD><TD class=bottomline>&nbsp;</TD></TR>\n';
+		DownloadVenster += '</TABLE>\n';
+		DownloadVenster += '</BODY>\n';
+		DownloadVenster += '</HTML>\n';
+		return(DownloadVenster); 						 						 						 				
+	}
+
+// --></script>
+
+<table id=t2 cellpadding=20 cellspacing=0 border=0 width="100%"><tr id=t2><td id=t2>
+<table id=T3 cellpadding=0 cellspacing=0 border=0 width="100%" class="filesTable"><tr id=T3 class=heading><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=T4 cellpadding=0 cellspacing=0 border=0 width="100%" bgcolor"=#FFFFFF"><tr id=T4>
+<td id=T4 width="40%" align=left><a target="search_main" class="listtitle subHeading" href="http://audioweb.radio2.nl//search_main.php?sort=1&Musima=fsvi7udah8kj232jkdgp2dmgl1"><IMG BORDER=0 SRC="images/sort_desc.gif" ALIGN=TOP>Titel</a></td>
+<td id=T4 width="40%"><a target="search_main" class="listtitle subHeading" href="http://audioweb.radio2.nl//search_main.php?sort=2&Musima=fsvi7udah8kj232jkdgp2dmgl1">Artiest</a></td>
+<td id=T4 width="20%"><a target="search_main" class="listtitle subHeading" href="http://audioweb.radio2.nl//search_main.php?sort=3&Musima=fsvi7udah8kj232jkdgp2dmgl1">Duur</a></td>
+</tr>
+</table></td></tr>
+<TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="13071142" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13071142&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127037#13071142">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 1000 JWSO - HOOGTEPUNTEN COMPILATIE ***', '-', 13071142));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 1000 JWSO - HOOGTEPUNTEN COMPILATIE ***</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:28</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13189024" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13189024&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127037#13189024">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** JOERI RAADSEL JINGLE + FILLER GOED', '-', 13189024));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** JOERI RAADSEL JINGLE + FILLER GOED</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:03:08</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="13088434" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13088434&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#13088434">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** #FX LP scratch', '-', 13088434));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** #FX LP scratch</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:02</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="12181300" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12181300&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12181300">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** #FX Printer luistercijfers', 'AUDIOLINK', 12181300));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** #FX Printer luistercijfers</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=AUDIOLINK&Musima=fsvi7udah8kj232jkdgp2dmgl1">AUDIOLINK</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:04</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="12877029" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12877029&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12877029">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 10-12 BREAKING NEWS', '-', 12877029));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 10-12 BREAKING NEWS</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:08</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="12814335" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12814335&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12814335">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 200612 Goal', '-', 12814335));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 200612 Goal</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:04</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="12814341" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12814341&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12814341">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 200612 stadiongeluiden', '-', 12814341));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 200612 stadiongeluiden</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:20:20</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="12821498" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12821498&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12821498">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 200703 Ad en sjon', 'Annemieke Bosschaart', 12821498));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 200703 Ad en sjon</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=Annemieke+Bosschaart&Musima=fsvi7udah8kj232jkdgp2dmgl1">Annemieke Bosschaart</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:05</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="12995359" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12995359&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12995359">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 211124 Top2000 Quiz tune intro', '-', 12995359));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 211124 Top2000 Quiz tune intro</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:05:52</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13301577" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13301577&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#13301577">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** 50 Pop jingle', '-', 13301577));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** 50 Pop jingle</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:03:22</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="165000410" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000410&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000410">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG ALRIGHT SUPERGRASS', 'JWSO', 165000410));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG ALRIGHT SUPERGRASS</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:26</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="12946694" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12946694&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12946694">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG GOOD TIMES', '-', 12946694));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG GOOD TIMES</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:09</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="165000499" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000499&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000499">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG MAI TAI', 'JWSO', 165000499));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG MAI TAI</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:03:24</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="165000352" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000352&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000352">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG MAKE ME (SMILE)', '-', 165000352));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG MAKE ME (SMILE)</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:20</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="165000514" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000514&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000514">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG OLD PIANO', 'JWSO', 165000514));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG OLD PIANO</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:15</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="12964429" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12964429&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#12964429">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG PAPERBACK', '-', 12964429));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG PAPERBACK</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:58</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="165000568" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000568&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000568">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG PEARLY SPENCER', 'JWSO', 165000568));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG PEARLY SPENCER</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:48</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="165000399" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000399&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#165000399">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AAN DE SLAG VOULEZ-VOUS', '-', 165000399));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AAN DE SLAG VOULEZ-VOUS</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:46</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="13335396" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13335396&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127038#13335396">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** AVRO Tros', '-', 13335396));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** AVRO Tros</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:08</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13337585" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13337585&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13337585">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BED 2 TOP 90s Never Grow Up (zonder dit is)', '-', 13337585));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BED 2 TOP 90s Never Grow Up (zonder dit is)</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:05:16</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="13311130" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13311130&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13311130">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BED Vierdaagse 2024 - 1', '-', 13311130));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BED Vierdaagse 2024 - 1</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:31</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13311131" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13311131&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13311131">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BED Vierdaagse 2024 - 2', '-', 13311131));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BED Vierdaagse 2024 - 2</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:11</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="165000583" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000583&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#165000583">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BED VIERDAAGSEPIRAAT', 'JWSO', 165000583));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BED VIERDAAGSEPIRAAT</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:04:23</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13311132" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13311132&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13311132">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** Bedje Vierdaagse 2024 - 3', '-', 13311132));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** Bedje Vierdaagse 2024 - 3</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:01:57</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="12803199" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12803199&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#12803199">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BELL PING', '-', 12803199));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BELL PING</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:02</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="165000288" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=165000288&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#165000288">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BNNVARA IDENT TEUN', 'BNNVARA', 165000288));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BNNVARA IDENT TEUN</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=BNNVARA&Musima=fsvi7udah8kj232jkdgp2dmgl1">BNNVARA</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:08</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="12162512" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=12162512&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#12162512">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BNNVARA UURSLUITER', '-', 12162512));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BNNVARA UURSLUITER</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:06</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13225687" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13225687&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13225687">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BNNVARA UURSLUITER BOEM short', '-', 13225687));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BNNVARA UURSLUITER BOEM short</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:00:06</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#FFFFFF"><td id=T3><a name="13023487" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13023487&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13023487">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BOTIC - THE JINGLE NIEUW', 'JWSO', 13023487));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BOTIC - THE JINGLE NIEUW</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=JWSO&Musima=fsvi7udah8kj232jkdgp2dmgl1">JWSO</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:33</TD></TR>
+</table>
+</td>
+</tr><TR id=T3 bgcolor="#F6F6F6"><td id=T3><a name="13385467" /><a target="search_main" xclass="listview" href="http://audioweb.radio2.nl//search_main.php?use_cache=1&opened=13385467&Musima=fsvi7udah8kj232jkdgp2dmgl1&1765127039#13385467">
+<img alt="Klik hier om extra informatie te tonen." border=0 src="images/title_closed.gif" /></a></td><td id=t3><img border=0 src="images/title_sound.gif" />
+</td><td id=T3><img border=0 src="images/clear.gif" width=20 height=20 /></td><td id=T3 width="100%">
+<table id=t6 cellpadding=0 cellspacing=0 border=0 width="100%">
+<tr id=T6><td id=T6 WIdth="40%" class="listview"><a href="javascript:void(0);" onClick="javascript:writedoc.open();writedoc.write(writebottom(1,0,0,0,0, '*** BOTIC - THE JINGLE NIEUW incl QUOTE', '-', 13385467));writedoc.close();window.top.frames['player'].hidePlayer();" class="listview">
+*** BOTIC - THE JINGLE NIEUW incl QUOTE</A></TD><TD ID=T6 WIDTH="40%" CLASS="listview"><A TARGET="main_view" class="listview" HREF="http://audioweb.radio2.nl//search.php?url_zoek_artiest=&Musima=fsvi7udah8kj232jkdgp2dmgl1">-</A></TD><TD ID=T6 WIDTH="20%" CLASS="listview">00:02:33</TD></TR>
+</table>
+</td>
+</tr></td>
+</tr></table>
+</td>
+</tr></table>
+<script language="javascript" src="overlib.js" type="text/javascript"></script>
+</body>
+</html>
