@@ -1,13 +1,12 @@
-using System.Net;
 using System.Text.RegularExpressions;
-
-public record Category(int Id, string Name) { }
 
 public record Titel(int Id) { }
 
 public static class Program
 {
-	private static readonly HttpClient _client = new HttpClient();
+	private const string BaseUrl = "http://localhost:8080";
+
+	private static readonly HttpClient _client = new();
 
 	public static async Task Main(string[] args)
 	{
@@ -22,34 +21,8 @@ public static class Program
 		var titels = await FetchPaginasAsync(musima, cat);
 
 		// Schrijf de titel id's weg naar een bestand.
+		Console.WriteLine($"{titels.Count} titels gevonden");
 		File.WriteAllLines($"titels_{cat}.txt", titels.OrderBy(t => t.Id).Select(t => t.Id.ToString()));
-	}
-
-	////////////////////////////////////////////
-	/// Categorieën parsen.
-	/// We hebben eenmalig de inhoud van de navigatie frame gedownload ("categorieen.html"),
-	/// en hier halen we alle categorienamen eruit.
-	////////////////////////////////////////////
-	public static void ParseCategorieen()
-	{
-		var path = "/home/marco/workspace/sandbox/radio2/radio2/categorieen.html";
-		var text = File.ReadAllText(path);
-
-		var regex = new Regex(@"href=""http:\/\/audioweb\.radio2\.nl\/\/search\.php\?open=(?<cat_id>[0-9]+)&amp;Musima=.+?&amp;catName=(?<cat_name>[^""]+)""");
-		var matches = regex.Matches(text);
-
-		var cats = new List<Category>();
-
-		foreach (Match match in matches)
-		{
-			var id = int.Parse(match.Groups["cat_id"].Value);
-			var name = WebUtility.UrlDecode(match.Groups["cat_name"].Value).Trim();
-
-			cats.Add(new(id, name));
-		}
-
-		File.WriteAllLines("categories.csv", cats.OrderBy(c => c.Name).Select(c => $"{c.Id.ToString(),-10};{c.Name}"));
-		var dbg = 2;
 	}
 
 	////////////////////////////////////////////
@@ -61,7 +34,7 @@ public static class Program
 	{
 		// Open (vertel de server welke categorie we willen hebben).
 		Console.WriteLine($"Categorie {categorieId} openen...");
-		var open = await _client.GetStringAsync($"http://localhost:8080/search.php?Musima={musima}&open={categorieId}");
+		var open = await _client.GetStringAsync($"{BaseUrl}/search.php?Musima={musima}&open={categorieId}");
 		Console.WriteLine("OK");
 
 		var titels = new List<Titel>();
@@ -72,7 +45,7 @@ public static class Program
 
 			// Geeft "next=1" mee vanaf de tweede pagina.
 			// Let wel dat de "1" als een boolean (true/false) wordt gebruikt, niet als getal (van welke pagina we willen bijvoorbeeld, dat zou grandioos zijn, maar helaas).
-			var pagina = await _client.GetStringAsync($"http://localhost:8080/search_main.php?Musima={musima}{(i > 0 ? "&next=1" : "")}");
+			var pagina = await _client.GetStringAsync($"{BaseUrl}/search_main.php?Musima={musima}{(i > 0 ? "&next=1" : "")}");
 
 			// Parse de titel (de titel id's) van deze pagina.
 			var titelsOpPagina = GetTitels(pagina).ToList();
@@ -104,7 +77,7 @@ public static class Program
 
 		foreach (Match match in matches)
 		{
-			Console.WriteLine($"titel_id:{match.Groups["titel_id"].Value}");
+			// Console.WriteLine($"titel_id:{match.Groups["titel_id"].Value}");
 			if (!int.TryParse(match.Groups["titel_id"].Value, out var titelId)) // Titel id's zijn ints toch?
 			{
 				Console.WriteLine($"Kan geen titel id parsen uit link '{match.Value}' (gek, bel de brandweer)");
