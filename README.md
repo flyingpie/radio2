@@ -26,7 +26,7 @@ dotnet Program.cs
 1. Open ```Downloader/Program.cs```, en pas ```musima``` aan.
 
 ```csharp
-var cat = 7279;
+var musima = "fsvi7udah8kj232jkdgp2dmgl1";
 ```
 
 2. Open de "Downloader" folder in een command prompt.
