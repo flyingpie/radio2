@@ -1,7 +1,3 @@
-using System.Text.RegularExpressions;
-
-public record Titel(int Id) { }
-
 public static class Program
 {
 	private const string BaseUrl = "http://localhost:8080";
@@ -13,17 +9,19 @@ public static class Program
 	{
 		// De "Musima" lijkt een soort session id te zijn, waarmee de server kan zien wie we zijn, en bij welke categorie- en pagina we zijn gebleven.
 		// Erg old-school!
-		var musima = "fsvi7udah8kj232jkdgp2dmgl1";
+		var musima = "fsvi7udah8kj232jkdgp2dmgl1"; // Dit vervangen met een recente "Musima" uit de browser.
 
-		// Categorie id, komt mee als "&open=1234" (om de categorie te "openen" op de server?).
+		// Pad naar directory met "title_xxx.txt" bestanden, gedownloaded door de Scraper.
 		var catsPath = "cats";
 
-		if (!Directory.Exists())
+		// Check that the categorie directory bestaat.
+		if (!Directory.Exists(catsPath))
 		{
 			Console.WriteLine($"Directory '{catsPath}' bestaat niet, weet je zeker dat de directory naam klopt?");
 			return;
 		}
 
+		// Checken dat we minstens 1 categorie bestand hebben.
 		var cats = Directory.GetFiles(catsPath);
 		if (cats.Length == 0)
 		{
@@ -31,25 +29,36 @@ public static class Program
 			return;
 		}
 
+		// Per categorie titels downloaden.
+		var i = 0;
 		foreach (var cat in cats)
 		{
 			var titelIds = await File.ReadAllLinesAsync(cat);
-			Console.WriteLine($"{titelIds.Length} Titels downloaden uit bestand '{cat}'");
+
+			Console.WriteLine($"[Cat{i++}/{cats.Length}] Titels downloaden uit bestand '{cat}'");
 			await DownloadTitelsAsync(musima, titelIds);
 		}
 	}
 
-	public async Task DownloadTitelsAsync(string musima, List<string> titelIds)
+	public static async Task DownloadTitelsAsync(string musima, ICollection<string> titelIds)
 	{
+		// Zorgen dat de output directory bestaat.
 		Directory.CreateDirectory(OutputDir);
-		var invalidChars = Path.GetInvalidFileNameChars();
-		var fouten = 0;
 
+		// Karaketers bepalen die we niet voor bestandsnamen mogen gebruiken.
+		var invalidChars = Path.GetInvalidFileNameChars();
+
+		// Fouten bijhouden (stopt na te veel fouten).
+		var fouten = 0;
+		var maxFouten = 10;
+
+		var i = 0;
 		foreach (var titelId in titelIds)
 		{
 			try
 			{
-				Console.WriteLine($"Downloaden van titel met id '{titelId}'...");
+				// Titel downloaden.
+				Console.WriteLine($"[Titel{i++}/{titelIds.Count}] Downloaden van titel met id '{titelId}'...");
 				var resp = await _client.GetAsync($"{BaseUrl}/download.php?Musima={musima}&titel_id={titelId}");
 				var respb = await resp.Content.ReadAsByteArrayAsync();
 
@@ -57,13 +66,14 @@ public static class Program
 				var fn = resp.Content.Headers.ContentDisposition.FileName ?? string.Empty;
 				var fnClean = new string(fn.Where(m => !invalidChars.Contains(m)).ToArray());
 
-				await File.WriteAllBytesAsync(Path.Combine(OutputDir, $"{titelId}_{fnClean}"));
+				// Titel naar bestand schrijven.
+				await File.WriteAllBytesAsync(Path.Combine(OutputDir, $"{titelId}_{fnClean}"), respb);
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Fout bij downloaden van titel '{titelId}': {ex.Message}");
 
-				if (++fouten > 10) {
+				if (++fouten > maxFouten) {
 					Console.WriteLine("Te veel fouten tegengekomen, lijkt iets stuk te zijn :(");
 					return;
 				}
