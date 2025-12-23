@@ -4,7 +4,8 @@ public record Titel(int Id) { }
 
 public static class Program
 {
-	private const string BaseUrl = "http://localhost:8080";
+	private const string BaseUrl = "http://audioweb.radio2.nl";
+	private const string OutputDir = "titels";
 
 	private static readonly HttpClient _client = new();
 
@@ -12,17 +13,16 @@ public static class Program
 	{
 		// De "Musima" lijkt een soort session id te zijn, waarmee de server kan zien wie we zijn, en bij welke categorie- en pagina we zijn gebleven.
 		// Erg old-school!
-		var musima = "fsvi7udah8kj232jkdgp2dmgl1";
+		var musima = "qi0ptr72njtnlbhmhafe0nd7n0";
 
-		// Categorie id, komt mee als "&open=1234" (om de categorie te "openen" op de server?).
-		var cat = 7279;
-
-		// Haal alle titel id's op in de categorie.
-		var titels = await FetchPaginasAsync(musima, cat);
-
-		// Schrijf de titel id's weg naar een bestand.
-		Console.WriteLine($"{titels.Count} titels gevonden");
-		File.WriteAllLines($"titels_{cat}.txt", titels.OrderBy(t => t.Id).Select(t => t.Id.ToString()));
+		var cats = File.ReadAllLines("cats");
+		var i = 0;
+		foreach (var cat in cats)
+		{
+			// Haal alle titel id's op in de categorie.
+			Console.WriteLine($"CAT {++i}/{cats.Length}:{cat}");
+			await FetchPaginasAsync(musima, cat);
+		}
 	}
 
 	////////////////////////////////////////////
@@ -30,7 +30,7 @@ public static class Program
 	/// Een categorie wordt "geopened" (lees: we vertellen de server welke categorie we willen hebben),
 	/// en vervolgens gaan we de pagina's langs, tot we alle titels hebben gehad.
 	////////////////////////////////////////////
-	public static async Task<List<Titel>> FetchPaginasAsync(string musima, int categorieId)
+	public static async Task FetchPaginasAsync(string musima, string categorieId)
 	{
 		// Open (vertel de server welke categorie we willen hebben).
 		Console.WriteLine($"Categorie {categorieId} openen...");
@@ -54,18 +54,21 @@ public static class Program
 			if (titelsOpPagina.Count == 0)
 			{
 				Console.WriteLine("Geen titels gevonden (lege categorie?)");
-				return titels;
+				return;
 			}
 
 			// Stop als we titels tegenkomen die we al gezien hebben (laatste pagina, stuurt terug naar de eerste).
 			if (titelsOpPagina.Any(titel => titels.Any(t => t.Id == titel.Id)))
 			{
 				Console.WriteLine("Einde van de lijst bereikt");
-				return titels;
+				return;
 			}
 
 			// Voeg gevonden titels toe aan de lijst.
 			titels.AddRange(titelsOpPagina);
+
+			// Download titels
+			await DownloadTitelsAsync(musima, categorieId, titelsOpPagina);
 		}
 	}
 
@@ -85,6 +88,51 @@ public static class Program
 			}
 
 			yield return new Titel(titelId);
+		}
+	}
+
+	public static async Task DownloadTitelsAsync(string musima, string cat, ICollection<Titel> titels)
+	{
+		// Zorgen dat de output directory bestaat.
+		Directory.CreateDirectory(OutputDir);
+
+		// Karaketers bepalen die we niet voor bestandsnamen mogen gebruiken.
+		var invalidChars = Path.GetInvalidFileNameChars();
+
+		// Fouten bijhouden (stopt na te veel fouten).
+		var fouten = 0;
+		var maxFouten = 100;
+
+		var i = 0;
+		foreach (var titel in titels)
+		{
+			try
+			{
+				// Titel downloaden.
+				var url = $"{BaseUrl}/download.php?Musima={musima}&sf=2&title_id={titel.Id}";
+				Console.WriteLine($"[Titel{++i}/{titels.Count}] Downloaden van titel met id '{titel.Id}' ({url})...");
+				var resp = await _client.GetAsync(url);
+				var respb = await resp.Content.ReadAsByteArrayAsync();
+
+				Console.WriteLine($"S:{resp.StatusCode}");
+
+				// Bestandsnaam opzetten.
+				var fn = resp.Content.Headers.ContentDisposition?.FileName ?? string.Empty;
+				var fnClean = new string(fn.Where(m => !invalidChars.Contains(m)).ToArray());
+
+				// Titel naar bestand schrijven.
+				await File.WriteAllBytesAsync(Path.Combine(OutputDir, $"{cat}_{titel.Id}_{fnClean}"), respb);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Fout bij downloaden van titel '{titel.Id}': {ex.Message}");
+
+				if (++fouten > maxFouten) {
+					Console.WriteLine("Te veel fouten tegengekomen, lijkt iets stuk te zijn :(");
+					return;
+				}
+				break;
+			}
 		}
 	}
 }
