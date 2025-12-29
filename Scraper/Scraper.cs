@@ -19,9 +19,15 @@ public static class Program
 		var i = 0;
 		foreach (var cat in cats)
 		{
+			var spl = cat.Split(";", StringSplitOptions.RemoveEmptyEntries);
+			if (spl.Length != 2)
+			{
+				Console.WriteLine($"Regel '{cat}' voldoet niet aan verwachte format '1234;Categorienaam'.");
+				continue;
+			}
 			// Haal alle titel id's op in de categorie.
-			Console.WriteLine($"CAT {++i}/{cats.Length}:{cat}");
-			await FetchPaginasAsync(musima, cat);
+			Console.WriteLine($"CAT {++i}/{cats.Length}:{spl[0]}");
+			await FetchPaginasAsync(musima, categorieId: spl[0], categorieNaam: spl[1]);
 		}
 	}
 
@@ -30,7 +36,7 @@ public static class Program
 	/// Een categorie wordt "geopened" (lees: we vertellen de server welke categorie we willen hebben),
 	/// en vervolgens gaan we de pagina's langs, tot we alle titels hebben gehad.
 	////////////////////////////////////////////
-	public static async Task FetchPaginasAsync(string musima, string categorieId)
+	public static async Task FetchPaginasAsync(string musima, string categorieId, string categorieNaam)
 	{
 		// Open (vertel de server welke categorie we willen hebben).
 		Console.WriteLine($"Categorie {categorieId} openen...");
@@ -68,7 +74,7 @@ public static class Program
 			titels.AddRange(titelsOpPagina);
 
 			// Download titels
-			await DownloadTitelsAsync(musima, categorieId, titelsOpPagina);
+			await DownloadTitelsAsync(musima, categorieId, categorieNaam, titelsOpPagina);
 		}
 	}
 
@@ -91,10 +97,11 @@ public static class Program
 		}
 	}
 
-	public static async Task DownloadTitelsAsync(string musima, string cat, ICollection<Titel> titels)
+	public static async Task DownloadTitelsAsync(string musima, string catId, string catNaam, ICollection<Titel> titels)
 	{
 		// Zorgen dat de output directory bestaat.
-		Directory.CreateDirectory(OutputDir);
+		var dir = Path.Combine(OutputDir, catNaam);
+		Directory.CreateDirectory(dir);
 
 		// Karaketers bepalen die we niet voor bestandsnamen mogen gebruiken.
 		var invalidChars = Path.GetInvalidFileNameChars();
@@ -121,7 +128,7 @@ public static class Program
 				var fnClean = new string(fn.Where(m => !invalidChars.Contains(m)).ToArray());
 
 				// Titel naar bestand schrijven.
-				await File.WriteAllBytesAsync(Path.Combine(OutputDir, $"{cat}_{titel.Id}_{fnClean}"), respb);
+				await File.WriteAllBytesAsync(Path.Combine(dir, $"{catId}_{titel.Id}_{fnClean}"), respb);
 			}
 			catch (Exception ex)
 			{
